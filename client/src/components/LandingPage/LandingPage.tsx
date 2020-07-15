@@ -1,11 +1,22 @@
 import React from "react";
 import styled from "styled-components";
-import Button, { CircularButton } from "../Buttons/Buttons";
+import { CircularButton } from "../Buttons/Buttons";
 import { Link } from "react-router-dom";
 //Icons
 import githubLogo from "../../icons/github.svg";
 import facebookLogo from "../../icons/facebook.svg";
 import twitterLogo from "../../icons/twitter.svg";
+
+const StyledLink = styled(Link)`
+    margin: 1rem 0;
+    padding: 0.8rem 3.5rem;
+    border-radius: 10px;
+    background-color: red;
+    text-decoration: none;
+    color: var(--text-color);
+    &:active {
+    }
+`;
 
 const LandingPageContainer = styled.main`
     height: 100%;
@@ -16,6 +27,8 @@ const LandingPageContainer = styled.main`
 `;
 
 const CallToAction = styled.h1`
+    font-size: 5rem;
+    font-family: var(--title-font);
     color: red;
 `;
 
@@ -32,7 +45,7 @@ const LandingPage: React.FC = () => {
     return (
         <LandingPageContainer>
             <CallToAction>Search For Anime!</CallToAction>
-            <Button>Search as a Guest</Button>
+            <StyledLink to="/search">Search as a Guest</StyledLink>
             <div className="oatuh-container">
                 <CircularButton onClick={openWindow}>
                     <img
