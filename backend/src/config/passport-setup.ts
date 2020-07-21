@@ -1,6 +1,7 @@
 import dotenv from "dotenv";
 import passport from "passport";
 import githubOAuth from "passport-github";
+import facebookOAuth from "passport-facebook";
 import { User } from "../db/db";
 
 interface UserData {
@@ -27,6 +28,34 @@ function passportSetup() {
     });
 
     const GithubStrategy = githubOAuth.Strategy;
+    const FacebookStrategy = facebookOAuth.Strategy;
+
+    passport.use(
+        new FacebookStrategy(
+            {
+                clientID: process.env.FACEBOOK_APP_ID!,
+                clientSecret: process.env.FACEBOOK_APP_SECRET!,
+                callbackURL: "http://localhost:5050/auth/facebook/callback",
+            },
+            async (accessToken, refreshToken, profile, done) => {
+                const alreadyPresent = await User.findOne({
+                    providerId: profile.id,
+                    provider: profile.provider,
+                });
+                if (alreadyPresent) {
+                    return done(null, alreadyPresent);
+                }
+                const newUser = await User.create({
+                    providerId: profile.id,
+                    username: profile.displayName,
+                    provider: profile.provider,
+                    profilePicture: `https://graph.facebook.com/${profile.id}/picture`,
+                });
+                return done(null, newUser);
+                console.log(profile);
+            }
+        )
+    );
 
     passport.use(
         new GithubStrategy(
