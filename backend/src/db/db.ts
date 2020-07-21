@@ -16,7 +16,7 @@ const userSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
-    loggedInWith: {
+    provider: {
         type: String,
         required: true,
     },
