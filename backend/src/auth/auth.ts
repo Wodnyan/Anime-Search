@@ -24,6 +24,16 @@ router.get(
     })
 );
 
+router.get("/twitter", passport.authenticate("twitter"));
+
+router.get(
+    "/twitter/callback",
+    passport.authenticate("twitter", {
+        successRedirect: CLIENT_URL,
+        failureRedirect: "/login/fail",
+    })
+);
+
 router.get("/login/fail", (req, res) => {
     res.sendStatus(401);
 });
