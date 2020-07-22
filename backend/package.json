@@ -16,7 +16,8 @@
         "mongoose": "^5.9.24",
         "passport": "^0.4.1",
         "passport-facebook": "^3.0.0",
-        "passport-github": "^1.1.0"
+        "passport-github": "^1.1.0",
+        "passport-twitter": "^1.0.4"
     },
     "devDependencies": {
         "@types/cookie-parser": "^1.4.2",
@@ -27,6 +28,7 @@
         "@types/passport": "^1.0.4",
         "@types/passport-facebook": "^2.1.10",
         "@types/passport-github": "^1.1.5",
+        "@types/passport-twitter": "^1.0.36",
         "dotenv": "^8.2.0"
     }
 }
