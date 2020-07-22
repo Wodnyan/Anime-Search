@@ -63,7 +63,7 @@ function passportSetup() {
             {
                 clientID: process.env.FACEBOOK_APP_ID!,
                 clientSecret: process.env.FACEBOOK_APP_SECRET!,
-                callbackURL: "http://localhost:5050/auth/facebook/callback",
+                callbackURL: "/auth/facebook/callback",
             },
             async (accessToken, refreshToken, profile, done) => {
                 const alreadyPresent = await User.findOne({
@@ -89,7 +89,7 @@ function passportSetup() {
             {
                 clientID: process.env.GITHUB_APP_ID!,
                 clientSecret: process.env.GITHUB_APP_SECRET!,
-                callbackURL: "http://localhost:5050/auth/github/callback",
+                callbackURL: "/auth/github/callback",
             },
             async (accessToken, refreshToken, profile, done) => {
                 const alreadyPresent = await User.findOne({
