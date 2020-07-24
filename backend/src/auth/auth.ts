@@ -39,12 +39,13 @@ router.get("/login/fail", (req, res) => {
 });
 
 router.get("/logout", (req, res) => {
-    //Log user out
+    req.logout();
+    res.redirect(CLIENT_URL);
 });
 
 router.get("/login", (req, res) => {
-    const { username, profilePicture, provider } = req.user;
     if (req.user) {
+        const { username, profilePicture, provider } = req.user;
         res.json({
             user: {
                 username,
