@@ -1,10 +1,18 @@
+import React from "react";
 import styled from "styled-components";
 
-interface Props {
+interface MessageContainerProps {
     type?: "error" | "warning";
 }
+interface Props {
+    children: React.ReactNode;
+    type?: "error" | "warning";
+    closeMessage?: () => void;
+}
 
-const Message = styled.div<Props>`
+const MessageContainer = styled.div<MessageContainerProps>`
+    position: relative;
+    margin: 1rem;
     padding: 1.5rem;
     border-radius: 0.5rem;
     background: ${(props) =>
@@ -15,6 +23,12 @@ const Message = styled.div<Props>`
             : "#1C1C1C"};
     color: #fff;
     transition: opacity 0.3s ease;
+    .close-message-button {
+        position: absolute;
+        top: 5px;
+        right: 5px;
+        cursor: pointer;
+    }
     &.fade-enter {
         opacity: 0;
     }
@@ -28,5 +42,15 @@ const Message = styled.div<Props>`
         opacity: 0;
     }
 `;
+const Message: React.SFC<Props> = ({ children, type, closeMessage }) => {
+    return (
+        <MessageContainer type={type}>
+            <span className="close-message-button" onClick={closeMessage}>
+                X
+            </span>
+            {children}
+        </MessageContainer>
+    );
+};
 
 export default Message;
