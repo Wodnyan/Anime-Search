@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useReducer } from "react";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
-import { CSSTransition } from "react-transition-group";
+import { CSSTransition, TransitionGroup } from "react-transition-group";
 import styled from "styled-components";
 import { UserContext } from "./context/UserContext";
 //Reducer
@@ -15,7 +15,7 @@ import { User, UserMessage } from "./interfaces";
 import "./App.scss";
 
 const MessageContainer = styled.aside`
-    position: absolute;
+    position: fixed;
     bottom: 1rem;
     right: 1rem;
 `;
@@ -23,6 +23,21 @@ const MessageContainer = styled.aside`
 const App: React.FC = () => {
     const [user, setUser] = useState<User | null>(null);
     const [messages, messageDispatch] = useReducer(messageReducer, []);
+
+    useEffect(() => {
+        let fooInterval: any;
+
+        if (!!messages.length) {
+            const lastItem = messages[messages.length - 1].id;
+            fooInterval = setInterval(() => {
+                messageDispatch({ type: "remove", id: lastItem });
+            }, 4000);
+        } else {
+            clearInterval(fooInterval);
+        }
+
+        return () => clearInterval(fooInterval);
+    }, [messages]);
 
     useEffect(() => {
         async function getUserData() {
@@ -66,17 +81,17 @@ const App: React.FC = () => {
                     <Route path="/search" component={SearchPage} />
                 </Switch>
                 <MessageContainer>
-                    <CSSTransition
-                        in={!!messages.length}
-                        classNames="fade"
-                        unmountOnExit
-                        timeout={1000}
-                    >
-                        <React.Fragment>
-                            {(messages as UserMessage[]).map(
-                                ({ message, type, id }) => (
+                    <TransitionGroup className="message-list">
+                        {(messages as UserMessage[]).map(
+                            ({ message, id, type }) => (
+                                <CSSTransition
+                                    key={id}
+                                    in={!!messages.length}
+                                    classNames="message"
+                                    unmountOnExit
+                                    timeout={500}
+                                >
                                     <Message
-                                        key={id}
                                         type={type}
                                         closeMessage={() =>
                                             messageDispatch({
@@ -87,10 +102,10 @@ const App: React.FC = () => {
                                     >
                                         {message}
                                     </Message>
-                                )
-                            )}
-                        </React.Fragment>
-                    </CSSTransition>
+                                </CSSTransition>
+                            )
+                        )}
+                    </TransitionGroup>
                 </MessageContainer>
             </Router>
         </UserContext.Provider>
