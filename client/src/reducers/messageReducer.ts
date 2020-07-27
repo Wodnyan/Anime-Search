@@ -13,7 +13,7 @@ export default function messageReducer(
         case "add":
             action.message.id = messageIdCounter;
             messageIdCounter++;
-            return [...state, action.message];
+            return [action.message, ...state];
         case "remove":
             return state.filter(
                 (message: UserMessage) => message.id !== action.id
