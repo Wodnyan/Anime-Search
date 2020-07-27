@@ -22,23 +22,26 @@ const MessageContainer = styled.div<MessageContainerProps>`
             ? "#FFCC00"
             : "#1C1C1C"};
     color: #fff;
-    transition: opacity 0.3s ease;
+    transition: opacity 0.5s ease, transform 0.3s ease;
     .close-message-button {
         position: absolute;
         top: 5px;
         right: 5px;
         cursor: pointer;
     }
-    &.fade-enter {
+    &.message-enter {
+        transform: translate(100%, 0);
         opacity: 0;
     }
-    &.fade-enter-active {
+    &.message-enter-active {
+        transform: translate(0, 0);
         opacity: 1;
     }
-    &.fade-exit {
+    &.message-exit {
         opacity: 1;
     }
-    &.fade-exit-active {
+    &.message-exit-active {
+        transform: translate(100%, 0);
         opacity: 0;
     }
 `;
