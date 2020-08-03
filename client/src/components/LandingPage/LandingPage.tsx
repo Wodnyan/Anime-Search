@@ -1,7 +1,8 @@
-import React from "react";
+import React, { useContext } from "react";
 import styled from "styled-components";
 import { CircularButton } from "../Buttons/Buttons";
 import { Link } from "react-router-dom";
+import { UserContext } from "../../context/UserContext";
 //Icons
 import githubLogo from "../../icons/github.svg";
 import facebookLogo from "../../icons/facebook.svg";
@@ -33,19 +34,22 @@ const CallToAction = styled.h1`
 `;
 
 const LandingPage: React.FC = () => {
+    const user = useContext(UserContext);
+
     function openWindow(
         event: React.MouseEvent<HTMLButtonElement, MouseEvent>
     ) {
         const provider = event.currentTarget.children[0].getAttribute(
             "data-provider"
         );
-        console.log(provider);
+        window.open("http://localhost:5050/auth/" + provider, "_self");
     }
-
     return (
         <LandingPageContainer>
             <CallToAction>Search For Anime!</CallToAction>
-            <StyledLink to="/search">Search as a Guest</StyledLink>
+            <StyledLink to="/search">
+                {user ? `Welcome ${user.username}` : "Search as a Guest"}
+            </StyledLink>
             <div className="oatuh-container">
                 <CircularButton onClick={openWindow}>
                     <img
