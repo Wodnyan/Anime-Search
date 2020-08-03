@@ -5,7 +5,9 @@ import cookieParser from "cookie-parser";
 import cookieSession from "cookie-session";
 import cors from "cors";
 import passport from "passport";
-import auth from "./auth/auth";
+import auth from "./routes/auth/auth";
+import favorite from "./routes/favorite/favorite";
+import user from "./routes/user/user";
 const app = express();
 const PORT = 5050;
 const SESSION_KEY = process.env.SESSION_KEY!;
@@ -35,7 +37,11 @@ app.use(
 app.use(passport.initialize());
 app.use(passport.session());
 
+app.use(express.json());
+
 app.use("/auth", auth);
+app.use("/favorite", favorite);
+app.use("/user", user);
 
 app.listen(PORT, () => {
     console.log(`Server listening on ${PORT}`);
