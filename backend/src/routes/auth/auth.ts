@@ -1,4 +1,5 @@
 import express from "express";
+import jwt from "jsonwebtoken";
 import passport from "passport";
 
 const router = express.Router();
@@ -45,7 +46,9 @@ router.get("/logout", (req, res) => {
 
 router.get("/login", (req, res) => {
     if (req.user) {
-        const { username, profilePicture, provider } = req.user;
+        const { username, profilePicture, provider, _id } = req.user;
+        const token = jwt.sign({ _id }, process.env.ACCESS_TOKEN_SECRET!);
+        res.cookie("access_token", token, { httpOnly: true });
         res.json({
             user: {
                 username,

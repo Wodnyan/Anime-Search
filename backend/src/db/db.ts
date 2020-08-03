@@ -11,6 +11,41 @@ mongoose.connect(
     }
 );
 
+const animeSchema = new mongoose.Schema({
+    mal_id: {
+        type: Number,
+        required: true,
+    },
+    image_url: {
+        type: String,
+        required: false,
+    },
+    synopsis: {
+        type: String,
+        required: true,
+    },
+    title: {
+        type: String,
+        required: true,
+    },
+    score: {
+        type: Number,
+        required: true,
+    },
+    episodes: {
+        type: Number,
+        required: true,
+    },
+    members: {
+        type: Number,
+        required: true,
+    },
+    type: {
+        type: String,
+        required: true,
+    },
+});
+
 const userSchema = new mongoose.Schema({
     username: {
         type: String,
@@ -25,5 +60,6 @@ const userSchema = new mongoose.Schema({
         required: true,
     },
     profilePicture: String,
+    liked: [animeSchema],
 });
 export const User = mongoose.model("users", userSchema);
