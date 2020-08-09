@@ -1,6 +1,7 @@
-import React, { useState, useContext } from "react";
-import { UserContext } from "../../context/UserContext";
+import React, { useState, useContext, useEffect } from "react";
 import styled from "styled-components";
+import { CSSTransition } from "react-transition-group";
+import { UserContext } from "../../context/UserContext";
 import { Anime } from "../../interfaces";
 
 interface Props {
@@ -17,6 +18,28 @@ const Overlay = styled.div`
     background: black;
     color: white;
     overflow-y: auto;
+
+    .close-overlay-button {
+        float: right;
+        border: none;
+        background: none;
+        cursor: pointer;
+    }
+
+    &.fade-enter {
+        transform: scale(0);
+    }
+    &.fade-enter-active {
+        transform: scale(1);
+        transition: transform 0.2s ease;
+    }
+    &.fade-exit {
+        transform: scale(1);
+    }
+    &.fade-exit-active {
+        transform: scale(0);
+        transition: transform 0.2s ease;
+    }
 `;
 
 const StyledCard = styled.div`
@@ -63,7 +86,35 @@ const StyledCard = styled.div`
         }
     }
 `;
-//px
+
+const AnimeOverlay: React.FC<{
+    synopsis: string;
+    onClick: () => void;
+}> = ({ onClick, synopsis }) => {
+    return (
+        <Overlay>
+            <button onClick={onClick} className="close-overlay-button">
+                <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="#fff"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    className="feather feather-x"
+                >
+                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+            </button>
+            <div className="foo">{synopsis}</div>
+        </Overlay>
+    );
+};
+
 const TopInfo: React.FC<{ title: string; episodes: number; type: string }> = ({
     title,
     episodes,
@@ -104,7 +155,7 @@ const BottomInfo: React.FC<{
     return (
         <div className="bottom-info">
             <div className="bottom-info__score">
-                <span>Retard:</span>
+                <span>Score:</span>
                 {score}
             </div>
             {user && (
@@ -159,7 +210,7 @@ const Card: React.FC<Props> = ({ data }) => {
         };
         if (like) {
             const removeFromLiked = await fetch(
-                "http://localhost:5050/favorite/delete",
+                "http://localhost:5050/favorite/",
                 {
                     method: "DELETE",
                     credentials: "include",
@@ -177,17 +228,14 @@ const Card: React.FC<Props> = ({ data }) => {
             console.log("disliked");
             setLike(false);
         } else {
-            const addToLiked = await fetch(
-                "http://localhost:5050/favorite/add",
-                {
-                    method: "POST",
-                    credentials: "include",
-                    headers: {
-                        "Content-type": "application/json",
-                    },
-                    body: JSON.stringify(anime),
-                }
-            );
+            const addToLiked = await fetch("http://localhost:5050/favorite/", {
+                method: "POST",
+                credentials: "include",
+                headers: {
+                    "Content-type": "application/json",
+                },
+                body: JSON.stringify(anime),
+            });
             if (addToLiked.status === 200) {
                 console.log(await addToLiked.json());
                 setLike(true);
@@ -199,7 +247,17 @@ const Card: React.FC<Props> = ({ data }) => {
     }
     return (
         <StyledCard data-id={mal_id}>
-            {showSynopsis && <Overlay>{synopsis}</Overlay>}
+            <CSSTransition
+                in={showSynopsis}
+                timeout={200}
+                classNames={"fade"}
+                unmountOnExit
+            >
+                <AnimeOverlay
+                    synopsis={synopsis}
+                    onClick={() => setShowSynopsis(false)}
+                />
+            </CSSTransition>
             <TopInfo episodes={episodes} title={title} type={type} />
             <MainInfo
                 image_url={image_url}
