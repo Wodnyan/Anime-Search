@@ -9,7 +9,6 @@ router.get("/:userId", async (req, res) => {
         const user = await User.findOne({
             _id: userId,
         });
-        if (!user) return res.sendStatus(404);
         const { _id, username, liked, profilePicture } = user;
         res.json({
             message: "Successfuly returned user",
@@ -21,7 +20,10 @@ router.get("/:userId", async (req, res) => {
             },
         });
     } catch (err) {
-        res.send("There was something wrong with your id");
+        res.status(400).json({
+            message:
+                "There was a problem with your request, check if the user id is correct",
+        });
     }
 });
 
