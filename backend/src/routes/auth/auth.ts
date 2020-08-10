@@ -54,6 +54,7 @@ router.get("/login", (req, res) => {
                 username,
                 profilePicture,
                 provider,
+                userId: _id
             },
             message: "Successful Authorization",
         });

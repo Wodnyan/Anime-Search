@@ -177,7 +177,7 @@ const BottomInfo: React.FC<{
     );
 };
 
-const Card: React.FC<{data: Anime}> = ({ data }) => {
+const Card: React.FC<{ data: Anime }> = React.memo(({ data }) => {
     const {
         mal_id,
         image_url,
@@ -195,17 +195,22 @@ const Card: React.FC<{data: Anime}> = ({ data }) => {
 
     useEffect(() => {
         async function getUserData() {
-            if(user) {
-                const resp = await fetch(`http://localhost:5050/user/${user.userId}`);
-                const data = await resp.json()
-                const isPresent = data.userInfo.liked.some((anime: any) => anime.mal_id === mal_id);
-                if(isPresent) {
-                    setLike(true)
+            if (user) {
+                const resp = await fetch(
+                    `http://localhost:5050/user/${user.userId}`
+                );
+                const data = await resp.json();
+                console.log(data)
+                const isPresent = data.userInfo.liked.some(
+                    (anime: any) => anime.mal_id === mal_id
+                );
+                if (isPresent) {
+                    setLike(true);
                 }
             }
         }
         getUserData();
-    }, [user])
+    }, [user, mal_id]);
 
     async function handleLike() {
         const anime = {
@@ -282,5 +287,5 @@ const Card: React.FC<{data: Anime}> = ({ data }) => {
             />
         </StyledCard>
     );
-};
+});
 export default Card;

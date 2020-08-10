@@ -2,6 +2,7 @@ export interface User {
     username: string;
     profilePicture: string;
     provider: string;
+    userId: string;
 }
 export interface UserMessage {
     id: number;
