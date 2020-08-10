@@ -4,10 +4,6 @@ import { CSSTransition } from "react-transition-group";
 import { UserContext } from "../../context/UserContext";
 import { Anime } from "../../interfaces";
 
-interface Props {
-    data: Anime;
-}
-
 const Overlay = styled.div`
     position: absolute;
     top: 0;
@@ -181,7 +177,7 @@ const BottomInfo: React.FC<{
     );
 };
 
-const Card: React.FC<Props> = ({ data }) => {
+const Card: React.FC<{data: Anime}> = ({ data }) => {
     const {
         mal_id,
         image_url,
@@ -196,6 +192,20 @@ const Card: React.FC<Props> = ({ data }) => {
     const [like, setLike] = useState(false);
     const [showSynopsis, setShowSynopsis] = useState(false);
     const user = useContext(UserContext);
+
+    useEffect(() => {
+        async function getUserData() {
+            if(user) {
+                const resp = await fetch(`http://localhost:5050/user/${user.userId}`);
+                const data = await resp.json()
+                const isPresent = data.userInfo.liked.some((anime: any) => anime.mal_id === mal_id);
+                if(isPresent) {
+                    setLike(true)
+                }
+            }
+        }
+        getUserData();
+    }, [user])
 
     async function handleLike() {
         const anime = {

@@ -4,7 +4,7 @@ import { User } from "../../db/db";
 
 const router = express.Router();
 
-router.delete("/delete", async (req, res, next) => {
+router.delete("/", async (req, res, next) => {
     if (!req.body || !req.cookies.access_token) {
         return res
             .sendStatus(400)
@@ -26,7 +26,7 @@ router.delete("/delete", async (req, res, next) => {
     }
 });
 
-router.post("/add", async (req, res, next) => {
+router.post("/", async (req, res, next) => {
     if (!req.body || !req.cookies.access_token) {
         return res
             .sendStatus(400)
